@@ -15,7 +15,7 @@ bool piece_overlap(vector<PiecePos> pp) {
 
 // Sorting order : KQRBNPkqrbnp
 const bool GT[16][16] =
-{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
@@ -30,7 +30,8 @@ const bool GT[16][16] =
     {0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
 
 bool swap_piece_pos(std::vector<PiecePos> &pieces,
     bool symmetric_endgame_and_btm)
@@ -73,7 +74,7 @@ bool swap_piece_pos(std::vector<PiecePos> &pieces,
     }
     // PIECE_KIND[pieces[3]] == KING
     return false;
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
   case 5:
     if (PIECE_KIND[pieces[1].piece] == KING) {
       PiecePos weak_king = pieces[0];
@@ -94,6 +95,8 @@ bool swap_piece_pos(std::vector<PiecePos> &pieces,
       return true;
     }
     return false;
+#elif !defined(MAX_MEN)
+#error
 #endif
   }
   assert(0);
@@ -122,7 +125,7 @@ void sort_piece_pos(vector<PiecePos> &pieces) {
     // Sort middle elements
     if (GT[pieces[1].piece][pieces[2].piece]) swap(pieces[1], pieces[2]);
     return;
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
   case 5:
     // start by sorting pieces[0,1,3,4] like sort_4_piece_pos
     if (GT[pieces[0].piece][pieces[1].piece]) swap(pieces[0], pieces[1]);
@@ -148,6 +151,8 @@ void sort_piece_pos(vector<PiecePos> &pieces) {
     assert(!GT[pieces[3].piece][pieces[4].piece]);
 
     return;
+#elif !defined(MAX_MEN)
+#error
 #endif
   }
   assert(0);

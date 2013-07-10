@@ -165,7 +165,7 @@ inline int& pp_compress(Position pawn1, Position pawn2) {
 }
 extern pair<Position, Position> PP_DECOMPRESS[47*48/2];
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 
 extern int XXX_COMPRESS_P1[62];
 extern int XXX_COMPRESS_P2_MINUS_64[63];
@@ -196,6 +196,8 @@ inline int ppp_compress(Position piece1, Position piece2, Position piece3) {
   return PPP_COMPRESS_P1[piece1] + PPP_COMPRESS_P2_MINUS_10480[piece2] + piece3;
 }
 
+#elif !defined(MAX_MEN)
+#error
 #endif
 
 #endif

@@ -11,10 +11,12 @@
 #define _BK_ bk
 #endif
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 4
+#define FIFTH_PARAM
+#elif MAX_MEN == 5
 #define FIFTH_PARAM , int _5
 #else
-#define FIFTH_PARAM
+# error
 #endif
 
 
@@ -91,11 +93,6 @@ int KQKR_subset_number(int brook, int wqueen, int _FK_, int _BK_ FIFTH_PARAM) {
   return EDGE_DIST[bk] + CORNER_DIST[bk] + dist(bk,wk) + (7 - dist(bk, brook));
 
 }
-
-
-#ifdef ALLOW_5_MEN_ENDGAME
-//...
-#endif
 
 ClusterFunction cluster_functions[DB_ARRAY_LENGTH];
 int cluster_functions_num_values[DB_ARRAY_LENGTH];

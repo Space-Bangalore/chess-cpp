@@ -8,6 +8,10 @@
 #include "bdd_index.hxx"
 #include "endgame_clustering_functions.hxx"
 
+#ifndef MAX_MEN
+#error
+#endif
+
 class BDD {
 public:
   BDD();
@@ -79,7 +83,7 @@ public:
 					     + clustering.base_subsets[64 | bdd_index[1] ]
 					     + clustering.base_subsets[128 | bdd_index[2] ]
 					     + clustering.base_subsets[192 | bdd_index[3] ]
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 					     + clustering.base_subsets[256 | bdd_index[4] ]
 #endif
       ];
@@ -88,7 +92,7 @@ public:
       cluster_number =
 	map_subset_to_cluster[cluster_functions[clustering.cf_index](bdd_index[0], bdd_index[1]
 								     , bdd_index[2], bdd_index[3]
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 								     , bdd_index[4]
 #endif
 								     )];
@@ -107,7 +111,7 @@ public:
 		 | (pattern[1]  &  bit_perm_and_permute_pos[bdd_index[1]])
 		 | (pattern[2]  &  bit_perm_and_permute_pos[bdd_index[2]])
 		 | (pattern[3]  &  bit_perm_and_permute_pos[bdd_index[3]])
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN >= 5
 		 | (pattern[4]  &  bit_perm_and_permute_pos[bdd_index[4]])
 #endif
       );
@@ -121,7 +125,7 @@ public:
     bdd_index[1] = (index >> 6) & 0x3F;
     bdd_index[2] = (index >> 12) & 0x3F;
     bdd_index[3] = (index >> 18) & 0x3F;
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN >= 5
     bdd_index[4] = (index >> 24) & 0x3F;
 #endif
     return (*this)[bdd_index];
@@ -166,11 +170,13 @@ public:
       subset_number = (clustering.base_subsets[index & 0x3F]
 		       + clustering.base_subsets[64 | ((index>>6) & 0x3F)]
 		       + clustering.base_subsets[128 | ((index>>12) & 0x3F)]
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 		       + clustering.base_subsets[192 | ((index>>18) & 0x3F)]
 		       + clustering.base_subsets[256 | (index>>24)]
-#else
+#elif MAX_MEN == 4
 		       + clustering.base_subsets[192 | (index>>18)]
+#else
+#error
 #endif
 		       );
       break;
@@ -180,11 +186,13 @@ public:
       subset_number = cluster_functions[clustering.cf_index](index & 0x3F
 							     , (index>>6) & 0x3F
 							     , (index>>12) & 0x3F
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 							     , (index>>18) & 0x3F
 							     , index>>24
-#else
+#elif MAX_MEN == 4
 							     , index>>18
+#else
+#error
 #endif
 							     );
       break;
@@ -198,11 +206,13 @@ public:
     index = ((pattern[0]  &  bit_perm_and_permute_pos[index & 0x3F])
 	     | (pattern[1]  &  bit_perm_and_permute_pos[(index>>6) & 0x3F])
 	     | (pattern[2]  &  bit_perm_and_permute_pos[(index>>12) & 0x3F])
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 	     | (pattern[3]  &  bit_perm_and_permute_pos[(index>>18) & 0x3F])
 	     | (pattern[4]  &  bit_perm_and_permute_pos[index>>24])
-#else
+#elif MAX_MEN == 4
 	     | (pattern[3]  &  bit_perm_and_permute_pos[index>>18])
+#else
+#error
 #endif
 	     );
 

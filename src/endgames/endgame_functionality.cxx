@@ -201,7 +201,7 @@ void EndgameFunctionality::release_dependency(const map<int, EFState> &old_state
 bool EndgameFunctionality::load_table(bool restrict_to_stm, bool build_if_nescessary,
     int restricted_stm) {
   assert(restricted_stm==0  ||  restricted_stm==1);
-  cerr << "EndgameFunctionality::load_table(r_t_stm " << restrict_to_stm
+  cerr << "EndgameFunctionality(" << name << ")::load_table(r_t_stm " << restrict_to_stm
       << ", b_i_n " << build_if_nescessary << ", r_stm " << restricted_stm << ")(" << name << ")\n";
 
   if (symmetric_endgame  &&  restrict_to_stm  &&  restricted_stm==BLACK)

@@ -7,8 +7,11 @@
 struct BDD_Index {
   BDD_Index() {
     u.raw[0] = 0;
-#if MAX_MEN >= 5
+#if MAX_MEN == 4
+#elif MAX_MEN == 5
     u.raw[1] = 0;
+#else
+#error MAX_MEN is undefined
 #endif
   }
 
@@ -17,16 +20,22 @@ struct BDD_Index {
   int index() {
     return u.positions[0] | (u.positions[1] << 6) |
       (u.positions[2] << 12) | (u.positions[3] << 18)
-#if MAX_MEN >= 5
+#if MAX_MEN == 4
+#elif MAX_MEN == 5
       | (u.positions[4] << 24)
+#else
+#error MAX_MEN is undefined
 #endif
       ;
   }
 
   BDD_Index &operator==(const BDD_Index &bddi) {
     u.raw[0] = bddi.u.raw[0];
-#if MAX_MEN >= 5
+#if MAX_MEN == 4
+#elif MAX_MEN == 5
     u.raw[1] = bddi.u.raw[1];
+#else
+#error MAX_MEN is undefined
 #endif
     return *this;
   }

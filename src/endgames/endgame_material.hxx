@@ -4,10 +4,11 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include "../typedefs.hxx"
 #include "../piece_pos.hxx"
 #include "../board_constants.hxx"
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 
 // When at most 5 pieces is left of which 2 must be white and
 // black king, the 0, 1, 2 or 3 remaining pieces can be uniquely
@@ -25,7 +26,7 @@
 #define DB_BQUEEN_VALUE 744
 #define DB_BKING_VALUE 0
 
-#else
+#elif MAX_MEN == 4
 
 #define DB_WPAWN_VALUE 1
 #define DB_WKNIGHT_VALUE 3
@@ -40,7 +41,10 @@
 #define DB_BQUEEN_VALUE 96
 #define DB_BKING_VALUE 0
 
+#else
+#error
 #endif
+
 #define DB_ARRAY_LENGTH (3*DB_BQUEEN_VALUE+1)
 
 

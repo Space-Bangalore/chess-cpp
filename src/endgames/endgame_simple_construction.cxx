@@ -2,7 +2,6 @@
 
 void build_endgame_simple(EndgameFunctionality* endgame, int8_t **table) {
 
-#ifdef ALLOW_5_MEN_ENDGAME
   if (endgame->get_num_pieces() == 5) {
     cerr << "################################################################\n"
         << "################################################################\n"
@@ -10,7 +9,7 @@ void build_endgame_simple(EndgameFunctionality* endgame, int8_t **table) {
         << "##########                                          ############\n"
         << "##########   ------------  WARNING !!!  ---------   ############\n"
         << "##########   You are constructing a 5 men endgame   ############\n"
-        << "##########   using the slow constuction method !    ############\n"
+        << "##########   using the slow construction method !   ############\n"
         << "##########   If the endgame contain pawns, it is    ############\n"
         << "##########   furthermore NOT likely that            ############\n"
         << "##########   sufficient memory is available!        ############\n"
@@ -19,7 +18,6 @@ void build_endgame_simple(EndgameFunctionality* endgame, int8_t **table) {
         << "################################################################\n"
         << "################################################################\n";
   }
-#endif
 
   map<int, EFState> old_states_wtm = endgame->load_dependency(WHITE);
   map<int, EFState> old_states_btm = endgame->load_dependency(BLACK);

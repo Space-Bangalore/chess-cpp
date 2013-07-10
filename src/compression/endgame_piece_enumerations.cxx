@@ -77,7 +77,8 @@ void init_PP_tables() {
 }
 
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 4
+#elif MAX_MEN == 5
 
 int XXX_COMPRESS_P1[62];
 int XXX_COMPRESS_P2_MINUS_64[63];
@@ -120,6 +121,8 @@ void init_PPP_tables() {
             triple<Position, Position, Position>(pawn1,pawn2,pawn3);
 }
 
+#else
+#error
 #endif
 
 
@@ -378,7 +381,8 @@ void verify_king_pawn_symmetry() {
 }
 
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 4
+#elif MAX_MEN == 5
 void verify_xxx_compress() {
   cerr << "Verifying xxx_compress()...\n";
   for (int i3=2; i3<64; i3++)
@@ -409,6 +413,8 @@ void verify_ppp_compress() {
         }
       }
 }
+#else
+#error
 #endif
 
 void verify_piece_enumerations() {
@@ -427,16 +433,21 @@ int init_piece_enumerations() {
   init_king_full_symmetry();
   init_king_pawn_symmetry();
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 4
+#elif MAX_MEN == 5
   init_XXX_tables();
   init_PPP_tables();
+#else
+#error
 #endif
 
 #ifndef NDEBUG
   verify_piece_enumerations();
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
   verify_xxx_compress();
   verify_ppp_compress();
+#elif !defined(MAX_MEN)
+#error
 #endif
 #endif
   return 0;

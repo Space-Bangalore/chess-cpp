@@ -4,10 +4,12 @@
 // board.hxx contains definitions of DB_WPAWN_VALUE, etc.
 #include "../board.hxx"
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 typedef int (*ClusterFunction)(int,int,int,int,int);
-#else
+#elif MAX_MEN == 4
 typedef int (*ClusterFunction)(int,int,int,int);
+#else
+#error
 #endif
 
 void init_cluster_functions();

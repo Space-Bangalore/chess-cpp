@@ -38,48 +38,16 @@ string short_version(string s) {
  * Returns whether successful.
  */
 bool dot_demand(vector<string> parsed, unsigned int length, ...) {
-  if (parsed.size() > length) return false;
-
+  if (parsed.size() != length) return false;
   va_list ap;
-  if (parsed.size() != length) goto try_shortened_version;
   va_start(ap, length);
   for (unsigned int i=0; i<length; i++) {
     uintptr_t arg = va_arg(ap, uintptr_t);
     if (arg < 0x100) {
-      if (arg  &&  parsed[i].length() != arg) goto try_shortened_version;
+      if (arg  &&  parsed[i].length() != arg) return false;
     } else {
       char* s = (char *)arg;
-      if (strcmp(parsed[i].c_str(), s)) goto try_shortened_version;
-    }
-  }
-  return true;
-
-  try_shortened_version:
-  //cerr << "Trying shortened version\n";
-  va_start(ap, length);
-  unsigned int num = 0;
-  for (unsigned int i=0; i<length; i++) {
-    uintptr_t arg = va_arg(ap, uintptr_t);
-    if (arg < 0x100) break;
-    ++num;
-  }
-  if (parsed[0].size() != num) { return false; }
-  if (parsed.size() != length - num + 1) { return false; }
-
-  va_start(ap, length);
-  for (unsigned int i=0; i<num; i++) {
-    uintptr_t arg = va_arg(ap, uintptr_t);
-    char* s = (char *)arg;
-    if (parsed[0][i] != s[0]) { return false; }
-  }
-  for (unsigned int i=num; i<length; i++) {
-    uintptr_t arg = va_arg(ap, uintptr_t);
-    if (arg >= 0x100) { return false; }
-    if (arg) {
-      // Interpret arg as a demand on length of blah
-      if (parsed[i-num+1].length() != arg) { return false; }
-    } else {
-      // No demands!
+      if (strcmp(parsed[i].c_str(), s)) return false;
     }
   }
   return true;

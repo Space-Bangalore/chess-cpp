@@ -486,7 +486,7 @@ BDD_Index preprocess_KXKP_bdd_index(const vector<PiecePos> &piece_list) {
 TABLE_INDEX_TO_BDD_INDEX(KXKP,4)
 
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 
 // ##############################
 // ##########  KXXXK  ###########
@@ -1140,4 +1140,6 @@ BDD_Index preprocess_KXYPK_bdd_index(const vector<PiecePos> &piece_list) {
 }
 TABLE_INDEX_TO_BDD_INDEX(KXYPK,5)
 
+#elif !defined(MAX_MEN)
+#error
 #endif

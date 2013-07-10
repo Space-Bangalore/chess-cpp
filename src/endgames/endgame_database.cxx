@@ -121,7 +121,7 @@ bool Endgames::construct_from_table_index(Board2 &board, string endgame_name, ui
 				weighted_piece_sum_to_endgame_name[DB_W ## piece1 ## _VALUE + DB_B ## piece2 ## _VALUE] = \
 				weighted_piece_sum_to_endgame_name[DB_B ## piece1 ## _VALUE + DB_W ## piece2 ## _VALUE] = sname
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 #define _KXYZK(sname, name, piece1, piece2, piece3, table_size) \
 		endgames[sname] = EndgameFunctionality(compress_ ## name ## _table_index, \
 				decompress_ ## name ## _table_index, \
@@ -138,6 +138,8 @@ bool Endgames::construct_from_table_index(Board2 &board, string endgame_name, ui
 				table_size, sname); \
 				weighted_piece_sum_to_endgame_name[DB_W ## piece1 ## _VALUE + DB_W ## piece2 ## _VALUE + DB_B ## piece3 ## _VALUE] = \
 				weighted_piece_sum_to_endgame_name[DB_B ## piece1 ## _VALUE + DB_B ## piece2 ## _VALUE + DB_W ## piece3 ## _VALUE] = sname
+#elif !defined(MAX_MEN)
+#error
 #endif
 
 void Endgames::init() {
@@ -206,7 +208,7 @@ void Endgames::init() {
 		_KXKY("KPKP", KPKP, PAWN  , PAWN  , 1806*48*48);
 	}
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 	{ // 5-men endgames
 
 		{ // ENDGAMES WITH K+3 vs K
@@ -386,6 +388,8 @@ void Endgames::init() {
 		}
 
 	}
+#elif !defined(MAX_MEN)
+#error
 #endif
 
 	{ // Initialize hash_list
@@ -449,7 +453,9 @@ void Endgames::load_tables(string name_pattern,
 		bool restrict_to_stm,
 		bool build_if_nescessary,
 		int restricted_stm)
-{ 
+{
+  cerr << "Endgames::load_tables(" << name_pattern << ", " <<
+      restrict_to_stm << ", " << build_if_nescessary << ", " << restricted_stm << ")" << endl;
 	vector<int> m = get_name_matches(name_pattern);
 	for (uint i=0; i<m.size(); i++) {
 		hash_list[m[i]]->load_table(restrict_to_stm, build_if_nescessary,
@@ -600,7 +606,7 @@ bool clr_endgame_database(Board *board, ostream& os, vector<string> &p) {
 		for (uint i=0; i<m.size(); i++)
 			endgames[m[i]].reduce_information();
 
-#ifdef ALLOW_5_MEN_ENDGAME
+#if MAX_MEN == 5
 	} else if (dot_demand(p, 5, "a", "b", "c", (uintptr_t)1, (uintptr_t)0)) {
 		cerr << "Doing secret stuff with KRRRK...\n";
 		EndgameFunctionality &ef = endgames["KRRRK"];
@@ -653,6 +659,8 @@ bool clr_endgame_database(Board *board, ostream& os, vector<string> &p) {
 			ef.direct_bdd_index(pv, b);
 		}
 		cerr << "done\n";
+#elif !defined(MAX_MEN)
+#error
 #endif
 
 	} else if (dot_demand(p, 3, "print", "matches", (uintptr_t)0)) {
@@ -712,14 +720,14 @@ bool clr_endgame_database(Board *board, ostream& os, vector<string> &p) {
 
 		// BEGIN load table
 	} else if (dot_demand(p, 3, "load", "table", (uintptr_t)0)) {
-		os << "Loading endgame tables.\n";
+		os << "Loading endgame tables (3). endgames = " << &endgames << endl;
 		endgames.load_tables(p[2], false, false);
 	} else if (dot_demand(p, 4, "load", "table", (uintptr_t)0, (uintptr_t)1)) {
-		os << "Loading endgame tables.\n";
+    os << "Loading endgame tables (4). endgames = " << &endgames << endl;
 		bool buid_if_nescessary = p[3][0] == 't';
-		endgames.load_tables(p[1], false, buid_if_nescessary);
+		endgames.load_tables(p[2], false, buid_if_nescessary);
 	} else if (dot_demand(p, 5, "load", "table", (uintptr_t)0, (uintptr_t)1, (uintptr_t)1)) {
-		os << "Loading endgame tables.\n";
+    os << "Loading endgame tables (5). endgames = " << &endgames << endl;
 		bool buid_if_nescessary = p[3][0] == 't';
 		bool restrict_to_wtm = p[4][0] == 't';
 		endgames.load_tables(p[2], restrict_to_wtm, buid_if_nescessary);
